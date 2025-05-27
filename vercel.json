@@ -1,0 +1,18 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "amthanh.py",
+      "use": "@vercel/python",
+      "config": {
+        "maxLambdaSize": "50mb",
+        "includeFiles": ["static/**", "templates/**"]
+      }
+    }
+  ],
+  "routes": [
+    { "src": "/upload", "methods": ["POST"], "dest": "amthanh.py" },
+    { "src": "/audio",  "methods": ["GET"],  "dest": "amthanh.py" },
+    { "src": "/(.*)",    "methods": ["GET"],  "dest": "amthanh.py" }
+  ]
+}

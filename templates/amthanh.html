@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Phát Âm Thanh</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 2rem; }
+    h1 { color: #333; }
+  </style>
+</head>
+<body>
+  <h1>Giao diện phát lại âm thanh</h1>
+  {% if audio_exists %}
+    <audio controls autoplay>
+      <source src="/audio" type="audio/wav">
+      Trình duyệt không hỗ trợ phát âm thanh.
+    </audio>
+  {% else %}
+    <p>Chưa có bản ghi âm nào.</p>
+  {% endif %}
+</body>
+</html>
