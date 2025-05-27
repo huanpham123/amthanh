@@ -1,7 +1,7 @@
 {
   "version": 2,
   "builds": [
-    { "src": "upload.py", "use": "@vercel/python" }
+    { "src": "amthanh.py", "use": "@vercel/python" }
   ],
   "routes": [
     { "src": "/api/upload", "dest": "/upload.py" },
