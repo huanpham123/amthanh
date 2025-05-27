@@ -1,18 +1,26 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Phát Âm Thanh</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ESP32 Audio Stream</title>
 </head>
 <body>
-  <h1>Giao diện phát lại âm thanh</h1>
-  {% if audio_exists %}
-    <audio controls>
-      <source src="/audio" type="audio/wav">
-    </audio>
-  {% else %}
-    <p>Chưa có bản ghi âm nào.</p>
-  {% endif %}
+  <h1>ESP32 Audio Stream</h1>
+  <audio id="player" controls></audio>
+  <script>
+    const player = document.getElementById('player');
+    async function fetchAudio() {
+      try {
+        const resp = await fetch('/api/play');
+        if (!resp.ok) return;
+        const blob = await resp.blob();
+        player.src = URL.createObjectURL(blob);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+    setInterval(fetchAudio, 2000);
+  </script>
 </body>
 </html>
