@@ -1,34 +1,28 @@
-from flask import Flask, request, send_file, render_template
+from flask import Flask, request, send_from_directory, jsonify, render_template
 import os
 
-app = Flask(__name__, template_folder='templates')
-UPLOAD_PATH = '/tmp'
-RECORD_FILE = 'record.wav'
+app = Flask(__name__)
+UPLOAD_FOLDER = '/tmp/uploads'
+if not os.path.exists(UPLOAD_FOLDER):
+    os.makedirs(UPLOAD_FOLDER)
 
 @app.route('/')
 def index():
-    exists = os.path.exists(os.path.join(UPLOAD_PATH, RECORD_FILE))
-    return render_template('amthanh.html', audio_exists=exists)
+    return render_template('amthanh.html')
 
-@app.route('/upload', methods=['POST'])
-def upload():
-    file_path = os.path.join(UPLOAD_PATH, RECORD_FILE)
-    if os.path.exists(file_path):
-        os.remove(file_path)
-    # Read full body
-    data = request.get_data()
-    if not data:
-        return 'No data', 400
-    with open(file_path, 'wb') as f:
-        f.write(data)
-    return 'OK', 200
+@app.route('/api/upload', methods=['POST'])
+def upload_audio():
+    audio = request.files.get('file')
+    if not audio:
+        return jsonify({'error':'No file provided'}), 400
+    filepath = os.path.join(UPLOAD_FOLDER, 'record.wav')
+    audio.save(filepath)
+    return jsonify({'status':'ok'}), 200
 
-@app.route('/audio')
-def get_audio():
-    file_path = os.path.join(UPLOAD_PATH, RECORD_FILE)
-    if not os.path.exists(file_path):
-        return 'Not Found', 404
-    return send_file(file_path, mimetype='audio/wav')
+@app.route('/api/play')
+def play_audio():
+    return send_from_directory(UPLOAD_FOLDER, 'record.wav', mimetype='audio/wav')
+
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=int(os.getenv('PORT', 5000)))
+    app.run(debug=True)
