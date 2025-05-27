@@ -15,15 +15,12 @@ def upload():
     file_path = os.path.join(UPLOAD_PATH, RECORD_FILE)
     if os.path.exists(file_path):
         os.remove(file_path)
-
-    # Stream upload: read request body in chunks
+    # Read full body
+    data = request.get_data()
+    if not data:
+        return 'No data', 400
     with open(file_path, 'wb') as f:
-        chunk_size = 1024 * 16
-        while True:
-            chunk = request.stream.read(chunk_size)
-            if not chunk:
-                break
-            f.write(chunk)
+        f.write(data)
     return 'OK', 200
 
 @app.route('/audio')
