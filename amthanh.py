@@ -13,20 +13,16 @@ def index():
 @app.route('/upload', methods=['POST'])
 def upload():
     file_path = os.path.join(UPLOAD_PATH, RECORD_FILE)
-    if os.path.exists(file_path):
-        os.remove(file_path)
+    if os.path.exists(file_path): os.remove(file_path)
     data = request.get_data()
-    if not data:
-        return 'No data', 400
-    with open(file_path, 'wb') as f:
-        f.write(data)
+    if not data: return 'No data', 400
+    with open(file_path, 'wb') as f: f.write(data)
     return 'OK', 200
 
 @app.route('/audio')
 def get_audio():
     file_path = os.path.join(UPLOAD_PATH, RECORD_FILE)
-    if not os.path.exists(file_path):
-        return 'Not Found', 404
+    if not os.path.exists(file_path): return 'Not Found', 404
     return send_file(file_path, mimetype='audio/wav')
 
 if __name__ == '__main__':
